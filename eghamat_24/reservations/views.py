@@ -36,7 +36,7 @@ class PaymentInfoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """ایجاد پرداخت برای رزرو کاربر"""
         reservation = serializer.validated_data.get('reservation')
-        if reservation.user != self.request.user:
+        if reservation.user.user != self.request.user:
             raise serializers.ValidationError("شما نمی‌توانید برای رزروهای دیگران پرداخت ایجاد کنید.")
         serializer.save()
 

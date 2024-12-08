@@ -74,7 +74,7 @@ class PaymentInfo(models.Model):
     reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE, verbose_name="اطلاعات رزرو")
     discount_code = models.CharField(max_length=50, blank=True, null=True, verbose_name="کد تخفیف")
     description = models.TextField(blank=True, null=True, verbose_name="توضیحات")
-    accepted_terms = models.BooleanField(default=False, verbose_name="تأیید قوانین و مقررات", blank=False)
+    accepted_terms = models.BooleanField(default=False, verbose_name="تأیید قوانین و مقررات")
     tracking_code = models.CharField(max_length=10, blank=True, null=True, verbose_name="کد پیگیری", unique=True)
     discount_price = models.CharField(max_length=50, blank=True, null=True, verbose_name="قیمت با تخفیف")
     DISCOUNT_AMOUNT = 2000000
