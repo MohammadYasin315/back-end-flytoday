@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
 from decimal import Decimal
 from .models import Reservation, PaymentInfo
 from django.core.exceptions import ValidationError 
@@ -12,7 +12,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             'id', 'user', 'room', 'check_in', 'check_out', 'adults',
             'total_price', 'created_at', 'updated_at', 'first_name',
             'last_name', 'nationality', 'passport_number', 'gender',
-        ]
+        ]   
     
     def validate(self, data):
         """اجرای اعتبارسنجی مدل"""
@@ -22,7 +22,7 @@ class ReservationSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             raise serializers.ValidationError(e.messages)  
         return data
- 
+
 
 class PaymentInfoSerializer(serializers.ModelSerializer):
     tracking_code = serializers.ReadOnlyField()

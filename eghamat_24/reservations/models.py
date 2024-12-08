@@ -6,12 +6,9 @@ from hotels.models import Room
 from accounts.models import UserProfile
 
 class Reservation(models.Model):
-    PENDING = 'PENDING'
-    SUCCESS = 'SUCCESS'
-    
     STATUS_CHOICES = [
-        (PENDING, 'در انتظار پرداخت'),
-        (SUCCESS, 'موفق'),
+        ('PENDING', 'در انتظار پرداخت'),
+        ('SUCCESS', 'موفق'),
     ]
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="reservations", null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="reservations", verbose_name="اتاق")
@@ -42,16 +39,6 @@ class Reservation(models.Model):
         if payment_info and payment_info.tracking_code: 
             return 'موفق'
         return 'در انتظار پرداخت'
-
-
-    def get_status_display_farsi(self):
-        """بازگرداندن وضعیت به‌صورت فارسی"""
-        status_dict = {
-            'PENDING': 'در انتظار پرداخت',
-            'SUCCESS': 'موفق',
-            'FAILED': 'ناموفق',
-        }
-        return status_dict.get(self.status, 'نامشخص')
 
     def calculate_price(self):
         """محاسبه قیمت کل رزرو بر اساس تعداد شب‌ها"""
@@ -118,6 +105,7 @@ class PaymentInfo(models.Model):
         """تولید کد پیگیری رندوم"""
         self.tracking_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
+
     def save(self, *args, **kwargs):
         """اضافه کردن کد پیگیری"""
         self.clean()
@@ -126,5 +114,7 @@ class PaymentInfo(models.Model):
         self.apply_discount()
         super().save(*args, **kwargs)
 
+
     def __str__(self):
         return f"پرداخت برای {self.reservation.last_name} ({self.reservation.room})"
+    

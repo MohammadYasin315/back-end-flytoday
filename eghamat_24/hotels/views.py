@@ -61,9 +61,9 @@ class ReviewCreateView(CreateAPIView):
 
 
 class ReviewDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated,] 
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
-    permission_classes = [IsAuthenticated,] 
 
     def get_object(self):
         review = super().get_object()

@@ -1,7 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -63,11 +62,13 @@ class UserProfileViewSet(viewsets.ViewSet):
         srz_data = ProfileSerializer(instance=self.queryset, many=True)
         return Response(data=srz_data.data)
 
+
     def retrieve(self, request, pk=None):
         profile = get_object_or_404(UserProfile, pk=pk)
         self.check_object_permissions(request, profile) 
         srz_data = ProfileSerializer(profile)
         return Response(srz_data.data)
+
 
     def update(self, request, pk=None):
         profile = get_object_or_404(UserProfile, pk=pk)
@@ -78,16 +79,19 @@ class UserProfileViewSet(viewsets.ViewSet):
             return Response(srz_data.data)
         return Response(srz_data.errors, status=400)
 
+
     # def destroy(self, request, pk=None):
     #     profile = get_object_or_404(UserProfile, pk=pk)
     #     self.check_object_permissions(request, profile)  
     #     profile.delete()
     #     return Response({"detail": "حذف حساب کاربری موفقیت آمیز بود"}, status=204)
 
+
     def get_permissions(self):
         if self.action in ['retrieve', 'update', 'destroy']:
             self.permission_classes += [IsOwner]
         return super().get_permissions()
+
 
 class UserReservationsView(APIView):
     permission_classes = [IsAuthenticated,]

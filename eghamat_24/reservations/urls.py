@@ -11,4 +11,3 @@ router.register(r'payments', PaymentInfoViewSet, basename='payment')
 urlpatterns = [
     path('', include(router.urls)),
 ]
-

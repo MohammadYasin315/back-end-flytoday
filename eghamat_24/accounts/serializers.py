@@ -48,6 +48,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
+
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'first_name', 'last_name', 'national_code', 'birth_date', 'address', 'landline']
@@ -92,3 +93,4 @@ class UserReservationSerializer(serializers.ModelSerializer):
         if payment_info:
             return payment_info.tracking_code
         return None
+    
