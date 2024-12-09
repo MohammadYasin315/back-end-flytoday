@@ -1,6 +1,6 @@
 """
-username : fely
-password : fely123
+username : fly
+password : fely12345
 
 """
 from django.contrib import admin

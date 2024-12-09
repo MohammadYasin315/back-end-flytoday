@@ -59,13 +59,16 @@ class UserProfileViewSet(viewsets.ViewSet):
     queryset = UserProfile.objects.all()
 
     def list(self, request):
+        if not request.user.is_staff:
+            return Response({"detail": "شما اجازه دیدن این لیست را ندارید."}, status=403)
+        
         srz_data = ProfileSerializer(instance=self.queryset, many=True)
         return Response(data=srz_data.data)
 
 
     def retrieve(self, request, pk=None):
         profile = get_object_or_404(UserProfile, pk=pk)
-        self.check_object_permissions(request, profile) 
+        self.check_object_permissions(request, profile)
         srz_data = ProfileSerializer(profile)
         return Response(srz_data.data)
 
@@ -98,7 +101,7 @@ class UserReservationsView(APIView):
 
     def get(self, request):
         """نمایش رزروهای کاربر جاری"""
-        user_profile = request.user.profile 
+        user_profile = request.user.profile
         reservations = Reservation.objects.filter(user=user_profile) 
         serializer = UserReservationSerializer(reservations, many=True)
         return Response(serializer.data)

@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'home',
     'hotels',
     'reservations',
-    'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'django_filters',
     'rest_framework',

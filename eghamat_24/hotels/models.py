@@ -13,7 +13,7 @@ class Hotel(models.Model):
     facilities = models.TextField(default=list) 
     restaurants_and_cafes = models.TextField(default=list)
     rules = models.TextField()
-    rating = models.DecimalField(max_digits=4, decimal_places=1, default=0.0)
+    rating = models.DecimalField(max_digits=3, decimal_places=1, default=0.0)
     faqs = models.TextField(default=list, blank=True) 
 
     def __str__(self):
@@ -23,7 +23,7 @@ class Hotel(models.Model):
 class Room(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='rooms')  
     name = models.CharField(max_length=255) 
-    price_per_night = models.DecimalField(max_digits=10, decimal_places=0) 
+    price_per_night = models.DecimalField(max_digits=20, decimal_places=0) 
     cancellation_policy = models.TextField(null=True, blank=True)  
     breakfast_included = models.BooleanField(default=False) 
 

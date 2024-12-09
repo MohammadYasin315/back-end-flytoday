@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return str(self.phone_number)
 
+
 # UserProfile models
 class UserProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')

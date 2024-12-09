@@ -94,6 +94,7 @@ class PaymentInfo(models.Model):
             self.reservation.total_price = discounted_price 
             self.reservation.save()
 
+
     def get_discounted_price(self):
         """محاسبه قیمت تخفیف‌خورده"""
         if self.discount_code == "OFF100" and self.reservation.total_price:
