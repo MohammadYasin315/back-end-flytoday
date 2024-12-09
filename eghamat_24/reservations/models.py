@@ -56,7 +56,7 @@ class Reservation(models.Model):
             room=self.room,
             check_in__lt=self.check_out,
             check_out__gt=self.check_in,
-        ).exclude(id=self.id)
+        )
         if overlapping_reservations.exists():
             raise ValidationError("این اتاق برای بازه زمانی انتخاب شده قبلاً رزرو شده است.")
 
