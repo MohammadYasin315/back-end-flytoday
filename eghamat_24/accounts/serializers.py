@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import CustomUser, UserProfile
+from .models import UserProfile
 from reservations.models import Reservation, PaymentInfo
 
 # Serializer for registration
@@ -8,17 +8,16 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = CustomUser
+        model = UserProfile
         fields = ['username', 'phone_number', 'password', 'email']
 
     def create(self, validated_data):
-        user = CustomUser.objects.create_user(
+        user = UserProfile.objects.create_user(
             username=validated_data['username'],
-            email=validated_data['email'],
-            phone_number=validated_data['phone_number'],
-            password=validated_data['password']
+            phone_number=validated_data['phone_number'],  
+            email=validated_data['email'], 
+            password=validated_data['password'] 
         )
-        UserProfile.objects.create(user=user)
         return user
 
 
@@ -42,7 +41,7 @@ class LoginSerializer(serializers.Serializer):
 # Serializer for list, retrieve, update
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
+        model = UserProfile
         fields = ['username', 'email', 'phone_number']
 
 

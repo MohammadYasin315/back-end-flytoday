@@ -3,9 +3,12 @@ from .models import Hotel, Room, Review
 
 
 class HotelSummarySerializer(serializers.ModelSerializer):
+    starting_price = serializers.IntegerField()
+
     class Meta:
         model = Hotel
-        fields = ['id', 'name', 'general_info', 'location', 'rating']
+        fields = ['id', 'name', 'general_info', 'location', 'rating', 'starting_price']
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField() 
@@ -34,4 +37,4 @@ class HotelSerializer(serializers.ModelSerializer):
 class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['rating', 'comment']  
+        fields = ['user', 'hotel', 'rating', 'comment', 'created_at']  

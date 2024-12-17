@@ -101,8 +101,8 @@ class UserReservationsView(APIView):
 
     def get(self, request):
         """نمایش رزروهای کاربر جاری"""
-        user_profile = request.user.profile
-        reservations = Reservation.objects.filter(user=user_profile) 
+        user_profile = request.user
+        reservations = Reservation.objects.filter(user=user_profile)
         serializer = UserReservationSerializer(reservations, many=True)
         return Response(serializer.data)
     

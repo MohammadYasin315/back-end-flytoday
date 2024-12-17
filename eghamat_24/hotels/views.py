@@ -1,5 +1,7 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.db.models import Min
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -8,31 +10,40 @@ from accounts import serializers
 from .models import Hotel, Review
 from .serializers import HotelSerializer, HotelSummarySerializer, ReviewCreateSerializer
 
-class HotelListView(ListAPIView):
-    serializer_class = HotelSummarySerializer
+class HotelListView(APIView):
+    def get(self, request):
+        city_id = request.query_params.get('city_id')
+        sort_by = request.query_params.get('sort_by')
 
-    def get_queryset(self):
-        city_id = self.request.query_params.get('city_id')
-        if city_id:
-            hotels = Hotel.objects.filter(city_id=city_id)
-            return hotels
-        return Hotel.objects.none()
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        if not queryset.exists():  
+        if not city_id:
             return Response(
-                {"detail": "هتل شهر مورد نظر پیدا نشد"}, 
+                {"detail": "شناسه شهر وارد نشده است."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        hotels = Hotel.objects.filter(city_id=city_id).annotate(
+            starting_price=Min('rooms__price_per_night')
+        )
+
+        if not hotels.exists():
+            return Response(
+                {"detail": "هتل شهر مورد نظر پیدا نشد."}, 
                 status=status.HTTP_404_NOT_FOUND
             )
-        serializer = self.get_serializer(queryset, many=True)
-        return Response({"hotels": serializer.data})
+
+        if sort_by == 'price_asc':
+            hotels = hotels.order_by('starting_price') 
+        elif sort_by == 'price_desc':
+            hotels = hotels.order_by('-starting_price')  
+        elif sort_by == 'rating':
+            hotels = hotels.order_by('-rating')
+
+        srz_data = HotelSummarySerializer(hotels, many=True)
+        return Response({"hotels": srz_data.data}, status=status.HTTP_200_OK)
 
 
-
-class HotelDetailView(RetrieveAPIView):
+class HotelDetailView(RetrieveAPIView): 
     serializer_class = HotelSerializer
-    queryset = Hotel.objects.all()
 
     def get_object(self):
         hotel_id = self.kwargs.get('hotel_id')  
@@ -78,3 +89,4 @@ class ReviewDetailView(RetrieveUpdateDestroyAPIView):
             {"detail": "نظر شما با موفقیت حذف شد"},
             status=status.HTTP_200_OK  
         )
+    
